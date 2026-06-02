@@ -3,7 +3,6 @@ export default function Sidebar() {
     <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-[240px] bg-[#000000] border-r border-white/[0.08] flex-col py-8 px-4 z-50 overflow-y-auto no-scrollbar justify-between">
       <div className="flex flex-col gap-8">
         
-        {/* Simple & Clean TikTok Clone Logo */}
         <div className="flex items-center gap-2.5 px-3">
           <img
             src="/logo.png"
@@ -15,7 +14,7 @@ export default function Sidebar() {
           </span>
         </div>
 
-        {/* Simplified Navigation Menu */}
+        {/* Menu */}
         <nav className="flex flex-col gap-2">
           {/* Trang chủ */}
           <div className="flex items-center gap-4 px-3.5 py-3 rounded-xl text-[#fe2c55] hover:bg-white/[0.04] font-bold cursor-pointer transition-all duration-150">

@@ -25,14 +25,14 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
   const [progress, setProgress] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
 
-  // 1. Control playback based on the centralized isActive prop
+  // 1. Điều khiển phát video dựa trên thuộc tính isActive tập trung
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
 
     if (isActive) {
       el.play().catch(() => {
-        // Fallback if browser blocks autoplay without gesture
+        // Phương án dự phòng nếu trình duyệt chặn tự động phát
         el.muted = true;
         setIsMuted(true);
         el.play().catch(() => {});
@@ -44,7 +44,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
     }
   }, [isActive]);
 
-  // 2. Cleanup timeouts on unmount to prevent memory leaks
+  // 2. Dọn dẹp timer khi component unmount để tránh rò rỉ bộ nhớ
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -53,7 +53,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
     };
   }, []);
 
-  // 3. Track video progress
+  // 3. Theo dõi tiến trình phát video
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
@@ -66,7 +66,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
     return () => el.removeEventListener("timeupdate", updateProgress);
   }, []);
 
-  // Toggle Mute / Sound
+  // Bật/tắt âm thanh
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     const el = videoRef.current;
@@ -75,7 +75,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
     setIsMuted(el.muted);
   }, []);
 
-  // Click to toggle play/pause
+  // Nhấp chuột để phát/tạm dừng video
   const togglePlay = useCallback(() => {
     const el = videoRef.current;
     if (!el) return;
@@ -90,7 +90,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
     
     setShowIcon(true);
     
-    // Clear previous timeout if user clicks rapidly to prevent race conditions
+    // Xóa timer cũ nếu người dùng nhấn liên tục để tránh tranh chấp trạng thái
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -105,14 +105,14 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
       data-video-id={video.id}
       className="h-dvh w-full snap-start bg-[#080808] relative flex items-center justify-center lg:gap-8 overflow-hidden"
     >
-      {/* Container holding the video frame and mobile elements */}
+      {/* Khung chứa khung hình video và các thành phần di động */}
       <div 
         className="relative flex items-center justify-center transition-all duration-300 ease-out
           w-[min(100vw,calc(100vh*9/16))] 
           h-[min(100vh,calc(100vw*16/9))]
           lg:w-auto lg:h-[94%] lg:aspect-[9/16]"
       >
-        {/* Video frame: rounded corners everywhere for a premium floating look */}
+        {/* Khung hình video: bo tròn góc xung quanh để có giao diện cao cấp */}
         <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.6)] border border-white/[0.03] bg-black">
           <video
             ref={videoRef}
@@ -120,12 +120,12 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
             src={video.videoUrl}
             loop
             playsInline
-            // Bandwidth Optimization: Only preload full video if active or preparing to be active
+            // Tối ưu hóa băng thông: Chỉ tải trước toàn bộ video khi nó đang active hoặc chuẩn bị active
             preload={isActive ? "auto" : "metadata"}
             onClick={togglePlay}
           />
 
-          {/* Floating Sound Toggle Button (Top Right) */}
+          {/* Nút loa bật/tắt tiếng (Góc trên bên phải) */}
           <button 
             onClick={toggleMute}
             className="absolute top-5 right-5 w-9 h-9 rounded-full bg-black/45 border border-white/10 hover:bg-black/70 flex items-center justify-center text-white/90 z-30 transition-all duration-150 active:scale-90 shadow-md backdrop-blur-md"
@@ -145,11 +145,11 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
             )}
           </button>
 
-          {/* Soft dark gradient overlays */}
+          {/* Các lớp phủ gradient tối mềm mại */}
           <div className="absolute top-0 inset-x-0 h-[20%] bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
           <div className="absolute bottom-0 inset-x-0 h-[40%] bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
 
-          {/* Play/Pause overlay anim */}
+          {/* Hiệu ứng biểu tượng phát/tạm dừng */}
           {showIcon && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
               <div className="text-white/90 animate-fade-scale bg-black/40 p-5 rounded-full backdrop-blur-md shadow-2xl">
@@ -162,7 +162,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
             </div>
           )}
 
-          {/* Author info & description: bottom-20 on mobile to clear bottom navigation bar */}
+          {/* Thông tin tác giả & mô tả: bottom-20 trên mobile để không bị đè bởi thanh điều hướng */}
           <div className="absolute bottom-20 lg:bottom-6 left-5 right-20 text-white z-10 flex flex-col gap-1.5 pointer-events-none">
             <p className="text-[15px] font-bold tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
               {video.authorName}
@@ -172,7 +172,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
             </p>
           </div>
 
-          {/* Thin Pink/Red Progress Indicator Bar */}
+          {/* Thanh tiến trình mỏng màu hồng/đỏ */}
           <div className="absolute bottom-14 lg:bottom-0 left-0 right-0 h-1 bg-white/10 z-20">
             <div 
               className="h-full bg-[#fe2c55] transition-all duration-100 ease-out" 
@@ -180,14 +180,14 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
             />
           </div>
 
-          {/* Mobile Action Bar (Inside the card bounds) */}
+          {/* Thanh tương tác trên Di động (Nằm bên trong video) */}
           <div className="absolute right-4 top-1/2 -translate-y-1/2 lg:hidden z-20">
             <ActionBar video={video} interaction={interaction} onToggleLike={onToggleLike} />
           </div>
         </div>
       </div>
 
-      {/* PC Action Bar (Outside the card frame, beautifully floating) */}
+      {/* Thanh tương tác trên PC (Nằm ngoài video, hiển thị lơ lửng) */}
       <div className="hidden lg:flex self-center z-20">
         <ActionBar video={video} interaction={interaction} onToggleLike={onToggleLike} />
       </div>
@@ -195,7 +195,7 @@ function VideoCard({ video, interaction, onToggleLike, isActive }: Props) {
   );
 }
 
-// Extracted ActionBar Component to prevent virtual DOM duplication and save resources
+// Tách biệt cấu trúc Action Bar thành component riêng để tránh lặp DOM và tối ưu tài nguyên
 const ActionBar = React.memo(({ 
   video, 
   interaction, 

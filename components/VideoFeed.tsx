@@ -13,7 +13,7 @@ export default function VideoFeed() {
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Centralized Intersection Observer to manage active video play/pause
+  // Quản lý việc phát/tạm dừng video tập trung thông qua Intersection Observer
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -21,7 +21,7 @@ export default function VideoFeed() {
     const observerOptions = {
       root: container,
       rootMargin: "0px",
-      threshold: 0.6, // Active when at least 60% of the video card is visible
+      threshold: 0.6, // Kích hoạt khi ít nhất 60% diện tích thẻ video hiển thị
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -35,7 +35,7 @@ export default function VideoFeed() {
       });
     }, observerOptions);
 
-    // Observe all video cards
+    // Theo dõi tất cả các thẻ video
     const cards = container.querySelectorAll("[data-video-id]");
     cards.forEach((card) => observer.observe(card));
 
